@@ -7,11 +7,11 @@ export const getContactById = async (id) => {
   return await Contact.findById(id);
 };
 export const createContact = async (payload) => {
-  const newContact = new ContactsCollection(payload);
+  const newContact = new Contact(payload);
   return await newContact.save();
 };
 export const updateContact = async (contactId, updateData) => {
-  return await Contacts.findByIdAndUpdate(contactId, updateData, {
+  return await Contact.findByIdAndUpdate(contactId, updateData, {
     new: true,
     runValidators: true,
   });
