@@ -16,3 +16,6 @@ export const updateContact = async (contactId, updateData) => {
     runValidators: true,
   });
 };
+export const deleteContact = async (contactId) => {
+  return await Contact.findByIdAndDelete(contactId);
+};
