@@ -4,6 +4,7 @@ import {
   deleteContact,
   getAllContacts,
   getContactById,
+  updateContact,
 } from '../services/contacts.js';
 
 export const getContactsController = async (req, res) => {
@@ -72,6 +73,10 @@ export const updateContactController = async (req, res) => {
   const updateData = req.body;
   if (!Object.keys(updateData).length) {
     throw createHttpError(400, 'Missing fields to update');
+  }
+  const updatedContact = await updateContact(contactId, updateData);
+  if (!updatedContact) {
+    throw createError(404, 'Contact not found');
   }
   res.status(200).json({
     status: 200,
