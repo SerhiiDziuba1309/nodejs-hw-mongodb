@@ -6,3 +6,16 @@ export const getAllContacts = async () => {
 export const getContactById = async (id) => {
   return await Contact.findById(id);
 };
+export const createContact = async (payload) => {
+  const newContact = new Contact(payload);
+  return await newContact.save();
+};
+export const updateContact = async (contactId, updateData) => {
+  return await Contact.findByIdAndUpdate(contactId, updateData, {
+    new: true,
+    runValidators: true,
+  });
+};
+export const deleteContact = async (contactId) => {
+  return await Contact.findByIdAndDelete(contactId);
+};
