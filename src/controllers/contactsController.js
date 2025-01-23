@@ -66,3 +66,15 @@ export const createContactController = async (req, res) => {
     data: newContact,
   });
 };
+export const updateContactController = async (req, res) => {
+  const { contactId } = req.params;
+  const updateData = req.body;
+  if (!Object.keys(updateData).length) {
+    throw createHttpError(400, 'Missing fields to update');
+  }
+  res.status(200).json({
+    status: 200,
+    message: 'Successfully patched a contact!',
+    data: updatedContact,
+  });
+};

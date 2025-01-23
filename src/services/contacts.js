@@ -9,4 +9,10 @@ export const getContactById = async (id) => {
 export const createContact = async (payload) => {
   const newContact = new ContactsCollection(payload);
   return await newContact.save();
-}
+};
+export const updateContact = async (contactId, updateData) => {
+  return await Contacts.findByIdAndUpdate(contactId, updateData, {
+    new: true,
+    runValidators: true,
+  });
+};
