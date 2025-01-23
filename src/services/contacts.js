@@ -6,3 +6,7 @@ export const getAllContacts = async () => {
 export const getContactById = async (id) => {
   return await Contact.findById(id);
 };
+export const createContact = async (payload) => {
+  const newContact = new ContactsCollection(payload);
+  return await newContact.save();
+}

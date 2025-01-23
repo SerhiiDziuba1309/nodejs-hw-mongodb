@@ -1,5 +1,9 @@
 import createHttpError from 'http-errors';
-import { getAllContacts, getContactById } from '../services/contacts.js';
+import {
+  createContact,
+  getAllContacts,
+  getContactById,
+} from '../services/contacts.js';
 
 export const getContactsController = async (req, res) => {
   try {
@@ -40,4 +44,25 @@ export const getContactByIdController = async (req, res) => {
       error: error.message,
     });
   }
+};
+export const createContactController = async (req, res) => {
+  const { name, phoneNumber, email, isFavourite, contactType } = req.body;
+  if (!name || !phoneNumber || !contactType) {
+    throw createHttpError(
+      400,
+      'Missing required fields: name, phoneNumber or contactType',
+    );
+  }
+  const newContact = await createContact({
+    name,
+    phoneNumber,
+    email,
+    isFavourite: isFavourite || false,
+    contactType,
+  });
+  res.status(201).json({
+    status: 201,
+    message: 'Seccessfully created a contsct!',
+    data: newContact,
+  });
 };
