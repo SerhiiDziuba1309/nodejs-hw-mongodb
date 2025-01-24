@@ -26,8 +26,8 @@ export const getContactByIdController = async (req, res, next) => {
 
   if (!contact) {
     throw createHttpError(404, 'Contact not found');
-      }
-    
+  }
+
   res.json({
     status: 200,
     message: `Successfully found contact with id ${contactId}!`,
@@ -36,7 +36,14 @@ export const getContactByIdController = async (req, res, next) => {
 };
 
 export const createContactController = async (req, res) => {
-  const contact = await createContact(req.body);
+  const { name, phoneNumber, contactType } = req.body;
+
+  if (!name || !phoneNumber || !contactType) {
+    throw createError(
+      400,
+      'Missing required fields: name, phoneNumber, contactType',
+    );
+  }
 
   res.status(201).json({
     status: 201,
@@ -44,7 +51,7 @@ export const createContactController = async (req, res) => {
     data: contact,
   });
 };
-export const updateContactController = async (req, res) => {
+export const updateContactController = async (req, res, next) => {
   const { contactId } = req.params;
   const result = await updateContact(contactId, req.body);
   if (!result) {
@@ -54,7 +61,7 @@ export const updateContactController = async (req, res) => {
   res.status(200).json({
     status: 200,
     message: 'Successfully patched a contact!',
-    data: result.contact,
+    data: result,
   });
 };
 export const deleteContactController = async (req, res, next) => {
