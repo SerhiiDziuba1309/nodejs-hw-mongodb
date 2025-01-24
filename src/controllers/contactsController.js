@@ -60,13 +60,9 @@ export const createContactController = async (req, res, next) => {
 };
 export const updateContactController = async (req, res, next) => {
   const { contactId } = req.params;
-  if (!req.body || Object.keys(req.body).length === 0) {
-    throw createHttpError(400, 'Missing fields to update');
-  }
-  const result = await updateContact(contactId, req.body);
-  if (!result) {
-    next(createHttpError(404, 'Contact not found'));
-    return;
+  const updatedContact = await updateContact(contactId, req.body);
+  if (!updatedContact) {
+    throw createHttpError(404, 'Contact not found');
   }
   res.status(200).json({
     status: 200,
