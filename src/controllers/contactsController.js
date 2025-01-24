@@ -60,7 +60,7 @@ export const createContactController = async (req, res, next) => {
 };
 export const updateContactController = async (req, res, next) => {
   const { contactId } = req.params;
-  if (!req.body || Object.keys(req.body).lenght === 0) {
+  if (!req.body || Object.keys(req.body).length === 0) {
     throw createHttpError(400, 'Missing fields to update');
   }
   const result = await updateContact(contactId, req.body);
