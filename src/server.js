@@ -19,10 +19,7 @@ export const setupServer = () => {
     const status = err.status || 500;
     res.status(status).json({
       status,
-      message: 'Something went wrong',
-      data: {
-        message: err.message,
-      },
+      message: err.message || 'Something went wrong',
     });
   });
 
