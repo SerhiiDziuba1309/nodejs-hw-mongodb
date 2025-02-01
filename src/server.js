@@ -15,17 +15,7 @@ export const setupServer = () => {
   app.get('/', (req, res) => {
     res.status(200).json({ message: 'Server is running' });
   });
-  app.use((err, req, res, next) => {
-    const status = err.status || 500;
-    res.status(status).json({
-      status,
-      message: err.message || 'Something went wrong',
-    });
-  });
 
-  app.use((req, res) => {
-    res.status(404).json({ message: 'Not found' });
-  });
   app.use(notFoundHandler);
   app.use(errorHandler);
 

@@ -8,14 +8,18 @@ import {
   updateContact,
 } from '../services/contacts.js';
 import { parsePagination } from '../utils/parsePagination.js';
+import { parseSort } from '../utils/parseSort.js';
+import { parseFilters } from '../utils/parseFilters.js';
 
 export const getContactsController = async (req, res, next) => {
   try {
-  
+    
     const { page, perPage } = parsePagination(req.query);
+    const { sortBy, sortOrder } = parseSort(req.query);
+    const filters = parseFilters(req.query);
 
   
-    const { contacts, totalItems, totalPages } = await getAllContacts(page, perPage);
+    const { contacts, totalItems, totalPages } = await getAllContacts(page, perPage, sortBy, sortOrder, filters);
 
     res.json({
       status: 200,
@@ -28,13 +32,15 @@ export const getContactsController = async (req, res, next) => {
         totalPages,
         hasPreviousPage: page > 1,
         hasNextPage: page < totalPages,
+        sortBy,
+        sortOrder,
+        filters,
       },
     });
   } catch (error) {
     next(error);
   }
 };
-
 
 export const getContactByIdController = async (req, res, next) => {
   const { contactId } = req.params;
