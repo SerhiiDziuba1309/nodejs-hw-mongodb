@@ -1,4 +1,8 @@
-import { registerUser, loginUser, refreshSession } from "../services/auth.js";
+import { 
+    registerUser,
+    loginUser,
+    refreshSession,
+    logoutUser } from "../services/auth.js";
 
 
 export const registerUserController = async (req, res, next) =>{
@@ -27,6 +31,7 @@ export const loginUserController = async (req, res, next) => {
             message: 'Successfully logged in a user!',
             data:{
                 accessToken: session.accessToken,
+                refreshToken: session.refreshToken
             },
         });
     }catch (error){
@@ -57,5 +62,23 @@ export const refreshSessionController = async(req, res, next)=>{
 
     }catch (error){
         next(error)
+    }
+};
+export const logoutUserController = async(req, res, next) =>{
+    try{
+        const{refreshToken} = req.cookies;
+        
+        if(!refreshToken){
+            return res.status(401).json({
+                status: 401,
+                message: 'Unauthorized: No refresh token'
+            })
+        }
+        await logoutUser(refreshToken);
+        res.clearCookie('refreshToken');
+        res.status(204).send();
+
+    } catch (error){
+        next (error);
     }
 };
