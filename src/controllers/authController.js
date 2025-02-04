@@ -1,4 +1,4 @@
-import { registerUser } from "../services/auth.js";
+import { registerUser, loginUser } from "../services/auth.js";
 
 
 export const registerUserController = async (req, res, next) =>{
@@ -14,3 +14,22 @@ export const registerUserController = async (req, res, next) =>{
         next(error)
     }
 }
+export const loginUserController = async (req, res, next) => {
+    try{
+        const session = await loginUser(req.body);
+
+        res.cookie('refreshToken', session.refreshToken,{
+            httpOnly: true,
+            maxAge: 30*24*60*60*1000,
+        });
+        res.status(200).json({
+            status: 200,
+            message: 'Successfully logged in a user!',
+            data:{
+                accessToken: session.accessToken,
+            },
+        });
+    }catch (error){
+        next(error);
+    }
+};
