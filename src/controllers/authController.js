@@ -1,4 +1,4 @@
-import { registerUser, loginUser } from "../services/auth.js";
+import { registerUser, loginUser, refreshSession } from "../services/auth.js";
 
 
 export const registerUserController = async (req, res, next) =>{
@@ -31,5 +31,31 @@ export const loginUserController = async (req, res, next) => {
         });
     }catch (error){
         next(error);
+    }
+};
+export const refreshSessionController = async(req, res, next)=>{
+    try{
+        const {refreshToken} = req.cookies;
+        if (!refreshToken){
+            return res.status(401).json ({
+                status: 401,
+                 message:'Unauthorized: No refresh token' });
+        }
+        const session = await refreshSession(refreshToken);
+
+        res.cookie('refreshToken', session.refreshToken, {
+            httpOnly: true,
+            maxAge: 30*24*60*60*1000,
+        });
+        res.status(200).json({
+            status:200,
+            message: 'Successfully refreshed a session!',
+            data: {
+                accessToken: session.accessToken,
+            },
+        });
+
+    }catch (error){
+        next(error)
     }
 };

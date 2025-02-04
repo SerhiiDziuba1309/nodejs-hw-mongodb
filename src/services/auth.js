@@ -55,3 +55,24 @@ export const loginUser = async ({ email, password }) => {
       refreshToken: session.refreshToken,
     };
   };
+export const refreshSession =async (refreshToken)=> {
+    const existingSession = await Session.findOne({refreshToken});
+    if (!existingSession){
+        throw createHttpError(401, 'Invalid refresh token');
+    }
+    await Session.deleteOne({userId: existingSession.userId});
+    const accessToken = generateToken();
+    const newRefreshToken = generateToken();
+
+    const newSession = await Session.create({
+        userId: existingSession.userId,
+        accessToken,
+        refreshToken: newRefreshToken,
+        accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
+        refreshTokenValidUntil: new Date(Date.now()+ ONE_MONTH),
+    });
+    return {
+        accessToken: newSession.accessToken,
+        refreshToken: newSession.refreshToken,
+    }
+}
