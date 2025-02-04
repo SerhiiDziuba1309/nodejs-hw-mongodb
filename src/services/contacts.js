@@ -1,4 +1,4 @@
-import { Contact } from '../models/contacts.js';
+import { Contact } from '../db/models/contacts.js';
 
 export const getAllContacts = async (page = 1, perPage = 10, sortBy = 'name', sortOrder = 'asc', filters = {}) => {
   const skip = (page - 1) * perPage;
