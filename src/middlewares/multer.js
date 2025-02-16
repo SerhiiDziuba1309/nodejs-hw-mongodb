@@ -6,12 +6,11 @@ const TEMP_UPLOAD_DIR = path.resolve("temp");
 
 if (!fs.existsSync(TEMP_UPLOAD_DIR)) {
   fs.mkdirSync(TEMP_UPLOAD_DIR, { recursive: true });
-}
-
+  
+} 
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-
     cb(null, TEMP_UPLOAD_DIR);
   },
   filename: function (req, file, cb) {

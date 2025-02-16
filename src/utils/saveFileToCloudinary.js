@@ -2,7 +2,6 @@ import cloudinary from "cloudinary";
 import fs from "fs/promises";
 import { getEnvVar } from "./getEnvVar.js";
 
-
 cloudinary.v2.config({
   cloud_name: getEnvVar("CLOUDINARY_CLOUD_NAME"),
   api_key: getEnvVar("CLOUDINARY_API_KEY"),
@@ -10,20 +9,24 @@ cloudinary.v2.config({
   secure: true,
 });
 
-
 export const saveFileToCloudinary = async (filePath) => {
   if (!filePath) {
-    throw new Error("Файл отсутствует или неверный путь");
+    throw new Error("File ist invalid!");
   }
 
   try {
+    
+
     const response = await cloudinary.v2.uploader.upload(filePath, {
       folder: "contacts",
     });
 
-    await fs.unlink(filePath); 
+
+
+    await fs.unlink(filePath);
     return response.secure_url;
   } catch (error) {
+
     throw error;
   }
 };
