@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema, Types } from 'mongoose';
 
 const contactSchema = new Schema(
   {
@@ -24,11 +24,11 @@ const contactSchema = new Schema(
       default: 'personal',
     },
     userId: {
-      type: Schema.Types.ObjectId,
+      type: Types.ObjectId,
       ref: 'User',
       required: true, 
     },
-    photo:{
+    photo: {
       type: String,
       default: null,
     },
@@ -38,5 +38,6 @@ const contactSchema = new Schema(
     versionKey: false,
   }
 );
+
 
 export const Contact = mongoose.model('Contact', contactSchema);

@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 
 import createHttpError from 'http-errors';
 import {
@@ -11,7 +12,7 @@ import { parsePagination } from '../utils/parsePagination.js';
 import { parseSort } from '../utils/parseSort.js';
 import { parseFilters } from '../utils/parseFilters.js';
 import { formatPagination } from '../utils/formatPagination.js';
-import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
+import {saveFileToCloudinary}  from '../utils/saveFileToCloudinary.js';
 
 export const getContactsController = async (req, res, next) => {
   try {
@@ -19,7 +20,14 @@ export const getContactsController = async (req, res, next) => {
     const { sortBy, sortOrder } = parseSort(req.query);
     const filters = parseFilters(req.query);
 
-    const { contacts, totalItems } = await getAllContacts(req.user._id, page, perPage, sortBy, sortOrder, filters);
+    const { contacts, totalItems } = await getAllContacts(
+      req.user._id, 
+      page, 
+      perPage, 
+      sortBy, 
+      sortOrder, 
+      filters
+    );
 
     res.json({
       status: 200,
@@ -51,14 +59,21 @@ export const getContactByIdController = async (req, res, next) => {
 
 export const createContactController = async (req, res, next) => {
   try {
+  
+
     const { name, phoneNumber, contactType } = req.body;
-    const userId = req.user._id; 
+    const userId = req.user._id;
     const photo = req.file;
 
-    let photoUrl = null;
+    if (!name || !phoneNumber || !contactType) {
+      throw createHttpError(400, "Missing required fields: name, phoneNumber, or contactType");
+    }
 
+    let photoUrl = null;
     if (photo) {
+    
       photoUrl = await saveFileToCloudinary(photo.path);
+      
     }
 
     const newContact = await createContact(userId, {
@@ -78,14 +93,25 @@ export const createContactController = async (req, res, next) => {
   }
 };
 
+
 export const updateContactController = async (req, res, next) => {
   try {
-    const updatedContact = await updateContact(req.user._id, req.params.contactId, req.body);
-    if (!updatedContact) throw createHttpError(404, 'Contact not found');
+    const { contactId } = req.params;
+    const userId = req.user._id; 
+    const updateData = { ...req.body };
+    if (req.file) {
+      updateData.photo = await saveFileToCloudinary(req.file.path);
+    }
+
+    const updatedContact = await updateContact(userId, new mongoose.Types.ObjectId(contactId), updateData);
+
+    if (!updatedContact) {
+      throw createHttpError(404, "Contact not found");
+    }
 
     res.status(200).json({
       status: 200,
-      message: 'Successfully updated a contact!',
+      message: "Successfully updated a contact!",
       data: updatedContact,
     });
   } catch (error) {
@@ -107,27 +133,34 @@ export const patchContactController = async (req, res, next) => {
   try {
     const { contactId } = req.params;
     const photo = req.file;
+    const userId = req.user._id;
+    const existingContact = await getContactById(userId, contactId);
 
-    let photoUrl = null;
-
-    if (photo) {
-      photoUrl = await saveFileToCloudinary(photo.path);
+    if (!existingContact) {
+      return next(createHttpError(404, "Contact not found!"));
     }
 
-    const result = await updateContact(contactId, {
+    let photoUrl = existingContact.photo; 
+
+
+    if (photo) {
+    
+      photoUrl = await saveFileToCloudinary(photo.path);
+  
+    }
+    const updatedContact = await updateContact(userId, contactId, {
       ...req.body,
       photo: photoUrl,
     });
 
-    if (!result) {
-      next(createHttpError(404, "Contact not found"));
-      return;
+    if (!updatedContact) {
+      return next(createHttpError(404, "Contact not found"));
     }
 
     res.json({
       status: 200,
-      message: "Successfully patched a contact!",
-      data: result,
+      message: "Successfully updated contact!",
+      data: updatedContact,
     });
   } catch (error) {
     next(error);

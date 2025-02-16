@@ -18,12 +18,12 @@ authRouter.post('/login', validateBody(loginSchema), loginUserController);
 authRouter.post('/refresh', refreshSessionController);
 authRouter.post('/logout', logoutUserController);
 
-authRouter.post('/request-reset-email', 
+authRouter.post('/send-reset-email', 
 validateBody(requestResetEmailSchema),
 ctrlWrapper(requestResetEmailController));
 
 authRouter.post(
-    '/reset-password',
+    '/reset-pwd',
     validateBody(resetPasswordSchema),
     ctrlWrapper(resetPasswordController),
 )
