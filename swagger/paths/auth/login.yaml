@@ -1,0 +1,36 @@
+
+tags:
+  - Auth
+summary: "User login"
+operationId: "loginUser"
+description: "Authenticates the user and returns a JWT token."
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - email
+          - password
+        properties:
+          email:
+            type: string
+            example: "user@example.com"
+          password:
+            type: string
+            example: "password123"
+responses:
+  '200':
+    description: "User logged in successfully"
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            token:
+              type: string
+              example: "jwt.token.here"
+  '401':
+    description: "Unauthorized"
+    $ref: "../../components/responses/401.yaml"
