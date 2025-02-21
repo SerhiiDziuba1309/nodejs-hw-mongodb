@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import { SWAGGER_PATH } from '../constants/tokens.js';
 
 
-export const swaggerDocs = ()=>{
+export const swaggerDocs = () => {
     try {
         const swaggerDoc =
         JSON.parse(fs.readFileSync(SWAGGER_PATH).toString());

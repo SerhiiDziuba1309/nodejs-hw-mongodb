@@ -6,14 +6,6 @@ operationId: "deleteContact"
 description: "Deletes a contact by its ID."
 security:
   - bearerAuth: []
-parameters:
-  - in: path
-    name: id
-    required: true
-    schema:
-      type: string
-    example: "1234567890abcdef"
-    description: "Unique identifier of the contact"
 responses:
   '200':
     description: "Contact deleted successfully"
