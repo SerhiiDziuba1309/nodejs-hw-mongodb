@@ -3,8 +3,7 @@ tags:
   - Contacts
 summary: "Get list of contacts"
 operationId: "getContacts"
-description: >
-  Retrieves a list of all contacts. You can use query parameters for filtering, sorting, and pagination.
+description: "Retrieves a list of all contacts. You can use query parameters for filtering, sorting, and pagination."
 security:
   - bearerAuth: []
 parameters:
@@ -26,17 +25,8 @@ responses:
     content:
       application/json:
         schema:
-          type: object
-          properties:
-            status:
-              type: integer
-              example: 200
-            message:
-              type: string
-              example: "Contacts retrieved successfully"
-            data:
-              type: array
-              items:
-                $ref: "../../components/schemas/contact.yaml"
+          type: array
+          items:
+            $ref: "../../components/schemas/contact.yaml"
   '401':
     $ref: "../../components/responses/401.yaml"

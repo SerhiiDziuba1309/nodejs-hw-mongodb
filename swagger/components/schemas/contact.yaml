@@ -1,6 +1,6 @@
 type: object
 required:
-  - _id
+  - contactId
   - name
   - phoneNumber
   - contactType
@@ -9,10 +9,10 @@ required:
   - userId
   - photo
 properties:
-  _id:
-    description: "Contact's id"
+  contactId:
+    description: "Contact's unique identifier"
     type: string
-    example: "65e4decdd286b30065d54af9"
+    example: "507f1f77bcf86cd799439011"
   name:
     description: "Contact's name"
     type: string
@@ -25,10 +25,11 @@ properties:
     description: "Type of contact"
     type: string
     enum: ["work", "home", "personal"]
+    example: "work"
   email:
     description: "Contact's email"
     type: string
-    example: "John@example.com"
+    example: "john.doe@example.com"
   isFavourite:
     description: "Indicates if the contact is marked as favourite"
     type: boolean
@@ -36,7 +37,7 @@ properties:
   userId:
     description: "User's id"
     type: string
-    example: "65e4decdd286b30065d54af9"
+    example: "507f1f77bcf86cd799439011"
   photo:
     description: "Link to contact's photo"
     type: string

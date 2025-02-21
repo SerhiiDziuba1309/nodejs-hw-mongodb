@@ -9,38 +9,42 @@ security:
 requestBody:
   required: true
   content:
-    application/json:
+    multipart/form-data:
       schema:
         type: object
         required:
           - name
-          - email
+          - phoneNumber
+          - contactType
+          - photo
         properties:
           name:
             type: string
             example: "John Doe"
+          phoneNumber:
+            type: string
+            example: "1111111111"
+          contactType:
+            type: string
+            enum: ["work", "home", "personal"]
+            example: "work"
           email:
             type: string
             example: "john.doe@example.com"
-          phone:
+          isFavourite:
+            type: boolean
+            example: false
+          photo:
+            description: "Photo of the contact"
             type: string
-            example: "+1234567890"
+            format: binary
 responses:
   '201':
     description: "Contact created successfully"
     content:
       application/json:
         schema:
-          type: object
-          properties:
-            status:
-              type: integer
-              example: 201
-            message:
-              type: string
-              example: "Contact created successfully"
-            data:
-              $ref: "../../components/schemas/contact.yaml"
+          $ref: "../../components/schemas/contact.yaml"
   '400':
     description: "Validation error"
     content:
